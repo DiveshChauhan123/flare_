@@ -29,7 +29,7 @@ The smart contract `ConfidentialPayroll.sol` acts as the treasury holding the fu
 
 ## Smart Contract Addresses
 *(Note for submission: Once you run the deployment script, paste your deployed contract addresses here).*
-- **Flare Coston2 Testnet**: `[To be deployed]`
+- **Flare Coston2 Testnet**: `0x25470fB040BbcA1Da4A843720dCbD4c09391b245`
 - **MOCK_PAYROLL_TOKEN**: `0x0000000000000000000000000000000000000001`
 - **MOCK_TEE_RELAYER**: `0x0000000000000000000000000000000000000002`
 
