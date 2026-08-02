@@ -1,0 +1,236 @@
+:root {
+  --bg-dark: #0a0a0c;
+  --bg-sidebar: #0f0f13;
+  --card-bg: rgba(20, 20, 24, 0.7);
+  --primary-color: #ff3366;
+  --primary-glow: rgba(255, 51, 102, 0.4);
+  --text-main: #ffffff;
+  --text-muted: #8a8a93;
+  --border-color: rgba(255, 255, 255, 0.08);
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* Layout */
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  z-index: 10;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+}
+
+.sidebar-logo h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.logo-icon {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  animation: pulse 2s infinite alternate;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-main);
+}
+
+.nav-item.active {
+  background: rgba(255, 51, 102, 0.1);
+  color: var(--primary-color);
+}
+
+.sidebar-footer {
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.network-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: #2ecc71;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #2ecc71;
+}
+
+.main-content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.top-header {
+  height: 70px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.header-breadcrumbs {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.header-breadcrumbs .current-page {
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.connect-btn {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.connect-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.page-content {
+  padding: 3rem;
+  flex: 1;
+}
+
+/* Common Components */
+.page-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+}
+
+.page-header p {
+  color: var(--text-muted);
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.dashboard-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(20px);
+}
+
+/* Background Effects */
+.background-glow {
+  position: fixed;
+  top: 10%;
+  right: 10%;
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, var(--primary-glow) 0%, rgba(10,10,12,0) 70%);
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(80px);
+}
+
+@keyframes pulse {
+  0% { opacity: 0.7; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1.05); }
+}
+
+/* Form inputs & UI specific elements from before */
+.status-badge {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.input-group input {
+  width: 100%;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border-color);
+  color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  box-sizing: border-box;
+}
+
+.execute-btn {
+  width: 100%;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 1.2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.execute-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px var(--primary-glow);
+}
