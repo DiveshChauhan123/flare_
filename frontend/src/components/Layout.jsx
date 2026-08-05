@@ -35,7 +35,7 @@ const Layout = () => {
           </button>
         </header>
         <main className="page-content">
-          <Outlet />
+          <Outlet context={{ walletAddress }} />
         </main>
       </div>
       <div className="background-glow"></div>

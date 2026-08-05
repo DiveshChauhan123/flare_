@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "D:\\wtf\\contracts\\contracts\\ConfidentialPayroll.sol": {
-      "lastModificationDate": 1785653258830,
-      "contentHash": "fb31db94a0853a1c8c835aa6a6bcd2b9",
+      "lastModificationDate": 1785678183840,
+      "contentHash": "0a074c013b0d56976f51cfd0671f6eaf",
       "sourceName": "contracts/ConfidentialPayroll.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -30,7 +30,6 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "@openzeppelin/contracts/access/Ownable.sol"
       ],
       "versionPragmas": [

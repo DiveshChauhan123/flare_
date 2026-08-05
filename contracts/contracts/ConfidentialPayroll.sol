@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
@@ -10,7 +9,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * to process private payroll distributions.
  */
 contract ConfidentialPayroll is Ownable {
-    IERC20 public payrollToken;
     address public teeRelayer; // The trusted TEE execution enclave
 
     event PayoutExecuted(uint256 totalAmount, uint256 recipientCount);
@@ -21,16 +19,15 @@ contract ConfidentialPayroll is Ownable {
         _;
     }
 
-    constructor(address _payrollToken, address _teeRelayer) Ownable(msg.sender) {
-        payrollToken = IERC20(_payrollToken);
+    constructor(address _teeRelayer) Ownable(msg.sender) {
         teeRelayer = _teeRelayer;
     }
 
     /**
      * @dev Admin funds the payroll contract
      */
-    function depositPayroll(uint256 amount) external onlyOwner {
-        require(payrollToken.transferFrom(msg.sender, address(this), amount), "Transfer failed");
+    function depositPayroll() external payable onlyOwner {
+        require(msg.value > 0, "Must send FLR");
     }
 
     /**
@@ -47,7 +44,8 @@ contract ConfidentialPayroll is Ownable {
         uint256 totalDistributed = 0;
 
         for (uint256 i = 0; i < recipients.length; i++) {
-            require(payrollToken.transfer(recipients[i], amounts[i]), "Transfer failed");
+            (bool success, ) = recipients[i].call{value: amounts[i]}("");
+            require(success, "Transfer failed");
             totalDistributed += amounts[i];
         }
 

@@ -1,4 +1,13 @@
+import { useState, useEffect } from 'react';
+
 const History = () => {
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem('payroll_history') || '[]');
+    setHistory(saved);
+  }, []);
+
   return (
     <div>
       <div className="page-header">
@@ -18,20 +27,32 @@ const History = () => {
             </tr>
           </thead>
           <tbody>
-            <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-              <td style={{ padding: '1rem 1.5rem' }}>Sep 30, 2026</td>
-              <td style={{ padding: '1rem 1.5rem', color: 'var(--primary-color)' }}>0x7f3...4a9d</td>
-              <td style={{ padding: '1rem 1.5rem' }}>24</td>
-              <td style={{ padding: '1rem 1.5rem' }}>14,500 FLR</td>
-              <td style={{ padding: '1rem 1.5rem' }}><span className="status-badge">Completed</span></td>
-            </tr>
-            <tr>
-              <td style={{ padding: '1rem 1.5rem' }}>Aug 31, 2026</td>
-              <td style={{ padding: '1rem 1.5rem', color: 'var(--primary-color)' }}>0x1a2...9b8c</td>
-              <td style={{ padding: '1rem 1.5rem' }}>22</td>
-              <td style={{ padding: '1rem 1.5rem' }}>13,200 FLR</td>
-              <td style={{ padding: '1rem 1.5rem' }}><span className="status-badge">Completed</span></td>
-            </tr>
+            {history.length === 0 ? (
+              <tr>
+                <td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                  No payroll history found.
+                </td>
+              </tr>
+            ) : (
+              history.map((item, index) => (
+                <tr key={index} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <td style={{ padding: '1rem 1.5rem' }}>{item.date}</td>
+                  <td style={{ padding: '1rem 1.5rem', color: 'var(--primary-color)' }}>
+                    <a 
+                      href={`https://coston2-explorer.flare.network/tx/${item.txHash}`} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      style={{ color: 'inherit', textDecoration: 'none' }}
+                    >
+                      {item.txHash.substring(0, 6)}...{item.txHash.substring(item.txHash.length - 4)}
+                    </a>
+                  </td>
+                  <td style={{ padding: '1rem 1.5rem' }}>{item.recipients}</td>
+                  <td style={{ padding: '1rem 1.5rem' }}>{item.amount}</td>
+                  <td style={{ padding: '1rem 1.5rem' }}><span className="status-badge">{item.status}</span></td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

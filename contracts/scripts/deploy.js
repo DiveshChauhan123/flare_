@@ -4,14 +4,12 @@ async function main() {
   const [deployer] = await hre.ethers.getSigners();
   console.log("Deploying contracts with the account:", deployer?.address);
 
-  // You will need to replace this with the actual ERC20 token address 
-  // you are using for payroll, and the actual TEE Relayer address.
-  const MOCK_PAYROLL_TOKEN = "0x0000000000000000000000000000000000000001";
+  // You will need to replace this with the actual TEE Relayer address.
   const MOCK_TEE_RELAYER = "0x0000000000000000000000000000000000000002";
 
   console.log("Deploying ConfidentialPayroll...");
   const ConfidentialPayroll = await hre.ethers.getContractFactory("ConfidentialPayroll");
-  const payroll = await ConfidentialPayroll.deploy(MOCK_PAYROLL_TOKEN, MOCK_TEE_RELAYER);
+  const payroll = await ConfidentialPayroll.deploy(MOCK_TEE_RELAYER);
 
   await payroll.waitForDeployment();
 

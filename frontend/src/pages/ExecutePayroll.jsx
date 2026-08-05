@@ -1,13 +1,17 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { ethers } from 'ethers';
+import abi from '../contracts/ConfidentialPayrollABI.json';
 
 const ExecutePayroll = () => {
   const [amount, setAmount] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [isExecuting, setIsExecuting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [txHash, setTxHash] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+  const { walletAddress } = useOutletContext();
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -19,24 +23,59 @@ const ExecutePayroll = () => {
     fileInputRef.current?.click();
   };
 
-  const handleExecute = () => {
+  const handleExecute = async () => {
     if (!selectedFile || !amount) {
       alert("Please enter an amount and upload the encrypted CSV.");
       return;
     }
+    if (!walletAddress) {
+      alert("Please connect your wallet first using the button in the top right.");
+      return;
+    }
     
-    // Simulate smart contract execution and TEE processing
     setIsExecuting(true);
     
-    setTimeout(() => {
-      setIsExecuting(false);
+    try {
+      // Connect to MetaMask
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      
+      const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS;
+      const contract = new ethers.Contract(contractAddress, abi.abi, signer);
+
+      // We parse the amount as ETH/FLR (18 decimals usually)
+      const parsedAmount = ethers.parseEther(amount.toString());
+
+      // Call the depositPayroll function and send native FLR
+      const tx = await contract.depositPayroll({ value: parsedAmount });
+      
+      // Wait for the transaction to be mined
+      const receipt = await tx.wait();
+      
+      setTxHash(receipt.hash);
       setIsSuccess(true);
       
-      // Redirect to history after 2 seconds
+      // Save to localStorage history
+      const historyItem = {
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        txHash: receipt.hash,
+        recipients: "Batch",
+        amount: `${amount} FLR`,
+        status: "Completed"
+      };
+      const existingHistory = JSON.parse(localStorage.getItem('payroll_history') || '[]');
+      localStorage.setItem('payroll_history', JSON.stringify([historyItem, ...existingHistory]));
+      
+      // Redirect to history after 4 seconds
       setTimeout(() => {
         navigate('/history');
-      }, 2000);
-    }, 3000);
+      }, 4000);
+    } catch (error) {
+      console.error("Contract execution failed:", error);
+      alert("Transaction failed: " + (error.reason || error.message));
+    } finally {
+      setIsExecuting(false);
+    }
   };
 
   return (
@@ -56,7 +95,19 @@ const ExecutePayroll = () => {
           <div style={{ textAlign: 'center', padding: '2rem 0' }}>
             <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
             <h2 style={{ color: '#2ecc71', margin: '0 0 1rem 0' }}>Batch Executed Successfully!</h2>
-            <p style={{ color: 'var(--text-muted)' }}>The Flare TEE has processed the confidential payroll.</p>
+            <p style={{ color: 'var(--text-muted)' }}>The transaction was confirmed on the blockchain and will be processed by the TEE.</p>
+            {txHash && (
+              <p style={{ margin: '1rem 0', wordBreak: 'break-all', fontSize: '0.9rem' }}>
+                <a 
+                  href={`https://coston2-explorer.flare.network/tx/${txHash}`} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  style={{ color: 'var(--primary-color)' }}
+                >
+                  View on Explorer: {txHash.substring(0, 10)}...{txHash.substring(txHash.length - 8)}
+                </a>
+              </p>
+            )}
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Redirecting to History...</p>
           </div>
         ) : (
