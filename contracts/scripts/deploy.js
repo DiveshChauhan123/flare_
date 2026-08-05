@@ -5,7 +5,7 @@ async function main() {
   console.log("Deploying contracts with the account:", deployer?.address);
 
   // You will need to replace this with the actual TEE Relayer address.
-  const MOCK_TEE_RELAYER = "0x0000000000000000000000000000000000000002";
+  const MOCK_TEE_RELAYER = "0x1a9C4A0f9D76c0b1D91d22E24E573a9b377618aE";
 
   console.log("Deploying ConfidentialPayroll...");
   const ConfidentialPayroll = await hre.ethers.getContractFactory("ConfidentialPayroll");
